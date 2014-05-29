@@ -1,0 +1,37 @@
+{
+    "longName": "Marked_R",
+    "companyName": "wintermute115@gmail.com",
+    "uuid": "27daaa3c-633d-4198-861a-f3f55b9df552",
+    "capabilities": [
+        ""
+    ],
+    "versionLabel": "1.0",
+    "appKeys": {},
+    "resources": {
+        "media": [
+            {
+                "characterRegex": "[0-9:]",
+                "file": "fonts/Futura Bold BT.ttf",
+                "name": "FONT_FUTURA_50",
+                "type": "font"
+            },
+            {
+                "characterRegex": "[0-9a-zA-Z %]",
+                "file": "fonts/FuturaExtended.ttf",
+                "name": "FONT_FUTURA_18",
+                "type": "font"
+            },
+            {
+                "file": "images/marked_r.png",
+                "name": "menu_image",
+                "type": "png",
+                "menuIcon": true
+            }
+        ]
+    },
+    "watchapp": {
+        "watchface": true
+    },
+    "shortName": "Marked_R",
+    "versionCode": 1
+}
