@@ -9,6 +9,7 @@ TextLayer *bt_layer;
 InverterLayer *inv_layer;
 char time_buffer[] = "00:00";
 char date_buffer[] = "00 September";
+char long_dow_buffer[] = "000";
 char dow_buffer[] = "00";
 
 
@@ -18,7 +19,8 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   //Format the buffer string using tick_time as the time source
   strftime(time_buffer, sizeof("00:00"), "%H:%M", tick_time);
   strftime(date_buffer, sizeof("00 September"), "%d %B", tick_time);
-  strftime(dow_buffer, sizeof("00"), "%a", tick_time);
+  strftime(long_dow_buffer, sizeof("000"), "%a", tick_time);
+  strncpy(dow_buffer, long_dow_buffer, 2);
 
   //Change the TextLayer text to show the new time!
   text_layer_set_text(time_layer, time_buffer);
@@ -80,8 +82,6 @@ void add_battery_layer() {
   snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
   text_layer_set_text(battery_layer, battery_text);
   layer_add_child(window_get_root_layer(window), (Layer*) battery_layer);
-
-  battery_state_service_subscribe(&handle_battery);
 }
 
 void add_bluetooth_layer() {
@@ -93,8 +93,6 @@ void add_bluetooth_layer() {
   text_layer_set_font(bt_layer, fonts_load_custom_font(bt_font));
   text_layer_set_text(bt_layer, (bluetooth_connection_service_peek() ? "BT" : ""));
   layer_add_child(window_get_root_layer(window), (Layer*) bt_layer);
-
-  bluetooth_connection_service_subscribe(&handle_bluetooth);
 }
 
 void window_load(Window *window)
@@ -137,6 +135,8 @@ void init()
     .unload = window_unload,
   });
   tick_timer_service_subscribe(MINUTE_UNIT, (TickHandler) tick_handler);
+  battery_state_service_subscribe(&handle_battery);
+  bluetooth_connection_service_subscribe(&handle_bluetooth);
   window_stack_push(window, true);
 }
  
