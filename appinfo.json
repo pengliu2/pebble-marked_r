@@ -1,37 +1,92 @@
 {
     "longName": "Marked_R",
-    "companyName": "wintermute115@gmail.com",
-    "uuid": "27daaa3c-633d-4198-861a-f3f55b9df552",
     "capabilities": [
         ""
     ],
+    "uuid": "27daaa3c-633d-4198-861a-f3f55b9df552",
     "versionLabel": "1.0",
-    "appKeys": {},
     "resources": {
         "media": [
             {
-                "characterRegex": "[0-9:]",
-                "file": "fonts/Futura Bold BT.ttf",
-                "name": "FONT_FUTURA_50",
-                "type": "font"
+                "type": "font",
+                "file": "fonts/Ubuntu-M.ttf",
+                "characterRegex": "[0-9%a-zA-Z ]",
+                "name": "FONT_UBUNTU_18"
             },
             {
-                "characterRegex": "[0-9a-zA-Z %]",
-                "file": "fonts/FuturaExtended.ttf",
-                "name": "FONT_FUTURA_18",
-                "type": "font"
-            },
-            {
-                "file": "images/marked_r.png",
-                "name": "menu_image",
                 "type": "png",
-                "menuIcon": true
+                "file": "images/battery_100.png",
+                "name": "IMG_BATTERY_100"
+            },
+            {
+                "type": "png",
+                "file": "images/battery_90.png",
+                "name": "IMG_BATTERY_90"
+            },
+            {
+                "type": "png",
+                "file": "images/battery_80.png",
+                "name": "IMG_BATTERY_80"
+            },
+            {
+                "type": "png",
+                "file": "images/battery_70.png",
+                "name": "IMG_BATTERY_70"
+            },
+            {
+                "type": "png",
+                "file": "images/battery_60.png",
+                "name": "IMG_BATTERY_60"
+            },
+            {
+                "type": "png",
+                "file": "images/battery_50.png",
+                "name": "IMG_BATTERY_50"
+            },
+            {
+                "type": "png",
+                "file": "images/battery_40.png",
+                "name": "IMG_BATTERY_40"
+            },
+            {
+                "type": "png",
+                "file": "images/battery_30.png",
+                "name": "IMG_BATTERY_30"
+            },
+            {
+                "type": "png",
+                "file": "images/battery_20.png",
+                "name": "IMG_BATTERY_20"
+            },
+            {
+                "type": "png",
+                "file": "images/battery_10.png",
+                "name": "IMG_BATTERY_10"
+            },
+            {
+                "type": "png",
+                "file": "images/battery_00.png",
+                "name": "IMG_BATTERY_00"
+            },
+            {
+                "type": "font",
+                "file": "fonts/Futura Bold BT.ttf",
+                "characterRegex": "[0-9:]",
+                "name": "FONT_FUTURA_50"
+            },
+            {
+                "menuIcon": true,
+                "type": "png",
+                "file": "images/marked_r.png",
+                "name": "menu_image"
             }
         ]
     },
+    "companyName": "wintermute115@gmail.com",
+    "versionCode": 1,
+    "shortName": "Marked_R",
     "watchapp": {
         "watchface": true
     },
-    "shortName": "Marked_R",
-    "versionCode": 1
+    "appKeys": {}
 }

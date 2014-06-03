@@ -6,12 +6,12 @@ TextLayer *date_layer;
 TextLayer *dow_layer;
 TextLayer *battery_layer;
 TextLayer *bt_layer;
+
 InverterLayer *inv_layer;
 char time_buffer[] = "00:00";
 char date_buffer[] = "00 September";
 char long_dow_buffer[] = "000";
 char dow_buffer[] = "00";
-
 
 void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
@@ -40,8 +40,7 @@ void handle_bluetooth(bool connected) {
   vibes_double_pulse();
 }
 
-void add_time_layer() {
-  ResHandle time_font = resource_get_handle(RESOURCE_ID_FONT_FUTURA_50);
+void add_time_layer(ResHandle time_font) {
   time_layer = text_layer_create(GRect(0, 53, 144, 168));
   text_layer_set_background_color(time_layer, GColorClear);
   text_layer_set_text_color(time_layer, GColorBlack);
@@ -50,33 +49,30 @@ void add_time_layer() {
   layer_add_child(window_get_root_layer(window), (Layer*) time_layer);
 }
 
-void add_date_layer() {
-  ResHandle date_font = resource_get_handle(RESOURCE_ID_FONT_FUTURA_18);
-  date_layer = text_layer_create(GRect(20, 148, 124, 20));
+void add_date_layer(ResHandle text_font) {
+  date_layer = text_layer_create(GRect(25, 148, 119, 20));
   text_layer_set_background_color(date_layer, GColorClear);
   text_layer_set_text_color(date_layer, GColorBlack);
   text_layer_set_text_alignment(date_layer, GTextAlignmentRight);
-  text_layer_set_font(date_layer, fonts_load_custom_font(date_font));
+  text_layer_set_font(date_layer, fonts_load_custom_font(text_font));
   layer_add_child(window_get_root_layer(window), (Layer*) date_layer);
 }
 
-void add_dow_layer() {
-  ResHandle dow_font = resource_get_handle(RESOURCE_ID_FONT_FUTURA_18);
-  dow_layer = text_layer_create(GRect(0, 148, 20, 20));
+void add_dow_layer(ResHandle text_font) {
+  dow_layer = text_layer_create(GRect(0, 148, 25, 20));
   text_layer_set_background_color(dow_layer, GColorClear);
   text_layer_set_text_color(dow_layer, GColorBlack);
   text_layer_set_text_alignment(dow_layer, GTextAlignmentLeft);
-  text_layer_set_font(dow_layer, fonts_load_custom_font(dow_font));
+  text_layer_set_font(dow_layer, fonts_load_custom_font(text_font));
   layer_add_child(window_get_root_layer(window), (Layer*) dow_layer);
 }
 
-void add_battery_layer() {
-  ResHandle battery_font = resource_get_handle(RESOURCE_ID_FONT_FUTURA_18);
+void add_battery_layer(ResHandle text_font) {
   battery_layer = text_layer_create(GRect (72, 0, 72, 20));
   text_layer_set_background_color(battery_layer, GColorClear);
   text_layer_set_text_color(battery_layer, GColorBlack);
   text_layer_set_text_alignment(battery_layer, GTextAlignmentRight);
-  text_layer_set_font(battery_layer, fonts_load_custom_font(battery_font));
+  text_layer_set_font(battery_layer, fonts_load_custom_font(text_font));
   BatteryChargeState charge_state = battery_state_service_peek();
   static char battery_text[] = "100%";
   snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
@@ -84,25 +80,25 @@ void add_battery_layer() {
   layer_add_child(window_get_root_layer(window), (Layer*) battery_layer);
 }
 
-void add_bluetooth_layer() {
-  ResHandle bt_font = resource_get_handle(RESOURCE_ID_FONT_FUTURA_18);
+void add_bluetooth_layer(ResHandle text_font) {
   bt_layer = text_layer_create(GRect (0, 0, 72, 20));
   text_layer_set_background_color(bt_layer, GColorClear);
   text_layer_set_text_color(bt_layer, GColorBlack);
   text_layer_set_text_alignment(bt_layer, GTextAlignmentLeft);
-  text_layer_set_font(bt_layer, fonts_load_custom_font(bt_font));
+  text_layer_set_font(bt_layer, fonts_load_custom_font(text_font));
   text_layer_set_text(bt_layer, (bluetooth_connection_service_peek() ? "BT" : ""));
   layer_add_child(window_get_root_layer(window), (Layer*) bt_layer);
 }
 
 void window_load(Window *window)
 {
-  //We will add the creation of the Window's elements here soon!
-  add_time_layer();
-  add_date_layer();
-  add_dow_layer();
-  add_battery_layer();
-  add_bluetooth_layer();
+  ResHandle time_font = resource_get_handle(RESOURCE_ID_FONT_FUTURA_50);
+  ResHandle text_font = resource_get_handle(RESOURCE_ID_FONT_UBUNTU_18);
+  add_time_layer(time_font);
+  add_date_layer(text_font);
+  add_dow_layer(text_font);
+  add_battery_layer(text_font);
+  add_bluetooth_layer(text_font);
   
   inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
   layer_add_child(window_get_root_layer(window), (Layer*) inv_layer);
