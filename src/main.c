@@ -50,7 +50,7 @@ void add_time_layer(ResHandle time_font) {
 }
 
 void add_date_layer(ResHandle text_font) {
-  date_layer = text_layer_create(GRect(25, 148, 119, 20));
+  date_layer = text_layer_create(GRect(30, 148, 114, 20));
   text_layer_set_background_color(date_layer, GColorClear);
   text_layer_set_text_color(date_layer, GColorBlack);
   text_layer_set_text_alignment(date_layer, GTextAlignmentRight);
@@ -59,7 +59,7 @@ void add_date_layer(ResHandle text_font) {
 }
 
 void add_dow_layer(ResHandle text_font) {
-  dow_layer = text_layer_create(GRect(0, 148, 25, 20));
+  dow_layer = text_layer_create(GRect(0, 148, 30, 20));
   text_layer_set_background_color(dow_layer, GColorClear);
   text_layer_set_text_color(dow_layer, GColorBlack);
   text_layer_set_text_alignment(dow_layer, GTextAlignmentLeft);
