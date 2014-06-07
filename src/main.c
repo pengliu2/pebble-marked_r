@@ -28,12 +28,12 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   text_layer_set_text(dow_layer, dow_buffer);
 }
 
+
 static void handle_battery(BatteryChargeState charge_state) {
   static char battery_text[] = "100%";
-
   snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
   text_layer_set_text(battery_layer, battery_text);
-}
+ }
 
 void handle_bluetooth(bool connected) {
   text_layer_set_text(bt_layer, connected ? "BT" : "");
@@ -97,12 +97,13 @@ void window_load(Window *window)
   add_time_layer(time_font);
   add_date_layer(text_font);
   add_dow_layer(text_font);
-  add_battery_layer(text_font);
   add_bluetooth_layer(text_font);
+  add_battery_layer(text_font);
   
   inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
   layer_add_child(window_get_root_layer(window), (Layer*) inv_layer);
   
+
   //Manually call the tick handler when the window is loading
   struct tm *t;
   time_t temp;
