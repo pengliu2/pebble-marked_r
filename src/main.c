@@ -6,8 +6,8 @@ TextLayer *date_layer;
 TextLayer *dow_layer;
 TextLayer *battery_layer;
 TextLayer *bt_layer;
-
 InverterLayer *inv_layer;
+
 char time_buffer[] = "00:00";
 char date_buffer[] = "00 September";
 char long_dow_buffer[] = "000";
@@ -41,7 +41,7 @@ void handle_bluetooth(bool connected) {
 }
 
 void add_time_layer(ResHandle time_font) {
-  time_layer = text_layer_create(GRect(0, 53, 144, 168));
+  time_layer = text_layer_create(GRect(0, 53, 144, 62));
   text_layer_set_background_color(time_layer, GColorClear);
   text_layer_set_text_color(time_layer, GColorBlack);
   text_layer_set_text_alignment(time_layer, GTextAlignmentCenter);
@@ -109,7 +109,7 @@ void window_load(Window *window)
   time_t temp;
   temp = time(NULL);
   t = localtime(&temp);
-  tick_handler(t, MINUTE_UNIT);
+  tick_handler(t, SECOND_UNIT);
 }
 
 void window_unload(Window *window)

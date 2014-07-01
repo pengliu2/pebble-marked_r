@@ -1,22 +1,15 @@
 {
-    "longName": "Marked_R",
-    "versionLabel": "1.0",
-    "companyName": "wintermute115@gmail.com",
     "appKeys": {},
     "capabilities": [
         ""
     ],
-    "uuid": "27daaa3c-633d-4198-861a-f3f55b9df552",
-    "watchapp": {
-        "watchface": true
-    },
-    "shortName": "Marked_R",
-    "versionCode": 1,
+    "companyName": "wintermute115@gmail.com",
+    "longName": "Marked_R",
     "resources": {
         "media": [
             {
-                "file": "fonts/Ubuntu-M.ttf",
                 "characterRegex": "[0-9%a-zA-Z ]",
+                "file": "fonts/Ubuntu-M.ttf",
                 "name": "FONT_UBUNTU_18",
                 "type": "font"
             },
@@ -76,8 +69,8 @@
                 "type": "png"
             },
             {
-                "file": "fonts/Futura Bold BT.ttf",
                 "characterRegex": "[0-9:]",
+                "file": "fonts/Futura Bold BT.ttf",
                 "name": "FONT_FUTURA_50",
                 "type": "font"
             },
@@ -88,5 +81,12 @@
                 "type": "png"
             }
         ]
+    },
+    "shortName": "Marked_R",
+    "uuid": "27daaa3c-633d-4198-861a-f3f55b9df552",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
     }
 }
