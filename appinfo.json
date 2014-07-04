@@ -1,7 +1,10 @@
 {
-    "appKeys": {},
+    "appKeys": {
+        "INVERT": 0,
+        "KEY_INVERT": 1
+    },
     "capabilities": [
-        ""
+        "configurable"
     ],
     "companyName": "wintermute115@gmail.com",
     "longName": "Marked_R",

@@ -28,6 +28,7 @@ static void in_recv_handler(DictionaryIterator *iterator, void *context)
       if(strcmp(t->value->cstring, "on") == 0)
       {
         //Set and save as inverted
+        inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
         layer_add_child(window_get_root_layer(window), (Layer*) inv_layer);
         persist_write_bool(KEY_INVERT, true);
       }
@@ -129,12 +130,12 @@ void window_load(Window *window)
   add_dow_layer(text_font);
   add_bluetooth_layer(text_font);
   add_battery_layer(text_font);
-  inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
   //Check for saved option
   bool inverted = persist_read_bool(KEY_INVERT);
   //Option-specific setup
   if(inverted == true)
   {
+    inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
     layer_add_child(window_get_root_layer(window), (Layer*) inv_layer);
   }
 
