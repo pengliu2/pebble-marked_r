@@ -109,7 +109,7 @@ void window_load(Window *window)
   time_t temp;
   temp = time(NULL);
   t = localtime(&temp);
-  tick_handler(t, SECOND_UNIT);
+  tick_handler(t, MINUTE_UNIT);
 }
 
 void window_unload(Window *window)
