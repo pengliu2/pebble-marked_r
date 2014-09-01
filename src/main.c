@@ -1,7 +1,5 @@
 #include <pebble.h>
   
-#define KEY_INVERT 0
-  
 Window *window;
 TextLayer *time_layer;
 TextLayer *date_layer;
@@ -14,35 +12,6 @@ char time_buffer[] = "00:00";
 char date_buffer[] = "00 September";
 char long_dow_buffer[] = "000";
 char dow_buffer[] = "00";
-
-static void in_recv_handler(DictionaryIterator *iterator, void *context)
-{
-  //Get Tuple
-  Tuple *t = dict_read_first(iterator);
-  if(t)
-  {
-    switch(t->key)
-    {
-    case KEY_INVERT:
-      //It's the KEY_INVERT key
-      if(strcmp(t->value->cstring, "on") == 0)
-      {
-        //Set and save as inverted
-        inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
-        layer_add_child(window_get_root_layer(window), (Layer*) inv_layer);
-        persist_write_bool(KEY_INVERT, true);
-      }
-      else if(strcmp(t->value->cstring, "off") == 0)
-      {
-        //Set and save as not inverted
-        inverter_layer_destroy(inv_layer);
- 
-        persist_write_bool(KEY_INVERT, false);
-      }
-      break;
-    }
-  }
-}
 
 void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
@@ -124,20 +93,14 @@ void add_bluetooth_layer(ResHandle text_font) {
 void window_load(Window *window)
 {
   ResHandle time_font = resource_get_handle(RESOURCE_ID_FONT_FUTURA_50);
-  ResHandle text_font = resource_get_handle(RESOURCE_ID_FONT_UBUNTU_18);
+  ResHandle text_font = resource_get_handle(RESOURCE_ID_FONT_UBUNTU_16);
   add_time_layer(time_font);
   add_date_layer(text_font);
   add_dow_layer(text_font);
   add_bluetooth_layer(text_font);
   add_battery_layer(text_font);
-  //Check for saved option
-  bool inverted = persist_read_bool(KEY_INVERT);
-  //Option-specific setup
-  if(inverted == true)
-  {
-    inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
-    layer_add_child(window_get_root_layer(window), (Layer*) inv_layer);
-  }
+  inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
+  layer_add_child(window_get_root_layer(window), (Layer*) inv_layer);
 
   //Manually call the tick handler when the window is loading
   struct tm *t;
