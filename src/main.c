@@ -2,7 +2,6 @@
   
 Window *window;
 TextLayer *time_layer;
-TextLayer *sec_layer;
 TextLayer *date_layer;
 TextLayer *dow_layer;
 TextLayer *battery_layer;
