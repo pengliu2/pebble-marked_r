@@ -1,17 +1,26 @@
 {
     "appKeys": {},
     "capabilities": [
-        ""
+        "location",
+        "configurable"
     ],
     "companyName": "wintermute115@gmail.com",
+    "enableMultiJS": true,
     "longName": "Marked_R",
     "projectType": "native",
     "resources": {
         "media": [
             {
-                "characterRegex": "[0-9%a-zA-Z ]",
+                "file": "images/marked_r.png",
+                "menuIcon": true,
+                "name": "menu_image",
+                "type": "png"
+            },
+            {
+                "characterRegex": "[0-9%a-zA-Z: ]",
                 "file": "fonts/Ubuntu-M.ttf",
                 "name": "FONT_UBUNTU_16",
+                "targetPlatforms": null,
                 "type": "font"
             },
             {
@@ -19,19 +28,16 @@
                 "file": "fonts/Futura Bold BT.ttf",
                 "name": "FONT_FUTURA_50",
                 "type": "font"
-            },
-            {
-                "file": "images/marked_r.png",
-                "menuIcon": true,
-                "name": "menu_image",
-                "type": "png"
             }
         ]
     },
-    "sdkVersion": "2",
+    "sdkVersion": "3",
     "shortName": "Marked_R",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
     "uuid": "27daaa3c-633d-4198-861a-f3f55b9df552",
-    "versionCode": 1,
     "versionLabel": "1.0",
     "watchapp": {
         "watchface": true

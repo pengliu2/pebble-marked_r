@@ -1,17 +1,19 @@
 #include <pebble.h>
-  
+
 Window *window;
+TextLayer *bg_layer;
 TextLayer *time_layer;
 TextLayer *date_layer;
 TextLayer *dow_layer;
 TextLayer *battery_layer;
 TextLayer *bt_layer;
-InverterLayer *inv_layer;
+TextLayer *home_layer;
 
 char time_buffer[] = "00:00";
 char date_buffer[] = "00 September";
 char long_dow_buffer[] = "000";
 char dow_buffer[] = "00";
+char home_buffer[] = "00000000000000000";
 
 void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
@@ -21,6 +23,10 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   strftime(date_buffer, sizeof("00 September"), "%d %B", tick_time);
   strftime(long_dow_buffer, sizeof("000"), "%a", tick_time);
   strncpy(dow_buffer, long_dow_buffer, 2);
+  if (false && clock_is_timezone_set()) {
+    clock_get_timezone(home_buffer, 32);
+    text_layer_set_text(home_layer, home_buffer);
+  }
 
   //Change the TextLayer text to show the new time!
   text_layer_set_text(time_layer, time_buffer);
@@ -40,10 +46,16 @@ void handle_bluetooth(bool connected) {
   vibes_double_pulse();
 }
 
+void add_bg_layer () {
+  bg_layer = text_layer_create(GRect(0, 0, 144, 168));
+  text_layer_set_background_color(bg_layer, GColorBlack);
+  layer_add_child(window_get_root_layer(window), (Layer*) bg_layer);
+}
+
 void add_time_layer(ResHandle time_font) {
   time_layer = text_layer_create(GRect(0, 53, 144, 62));
-  text_layer_set_background_color(time_layer, GColorClear);
-  text_layer_set_text_color(time_layer, GColorBlack);
+  text_layer_set_background_color(time_layer, GColorBlack);
+  text_layer_set_text_color(time_layer, GColorWhite);
   text_layer_set_text_alignment(time_layer, GTextAlignmentCenter);
   text_layer_set_font(time_layer, fonts_load_custom_font(time_font));
   layer_add_child(window_get_root_layer(window), (Layer*) time_layer);
@@ -51,8 +63,8 @@ void add_time_layer(ResHandle time_font) {
 
 void add_date_layer(ResHandle text_font) {
   date_layer = text_layer_create(GRect(30, 148, 114, 20));
-  text_layer_set_background_color(date_layer, GColorClear);
-  text_layer_set_text_color(date_layer, GColorBlack);
+  text_layer_set_background_color(date_layer, GColorBlack);
+  text_layer_set_text_color(date_layer, GColorWhite);
   text_layer_set_text_alignment(date_layer, GTextAlignmentRight);
   text_layer_set_font(date_layer, fonts_load_custom_font(text_font));
   layer_add_child(window_get_root_layer(window), (Layer*) date_layer);
@@ -60,8 +72,8 @@ void add_date_layer(ResHandle text_font) {
 
 void add_dow_layer(ResHandle text_font) {
   dow_layer = text_layer_create(GRect(0, 148, 30, 20));
-  text_layer_set_background_color(dow_layer, GColorClear);
-  text_layer_set_text_color(dow_layer, GColorBlack);
+  text_layer_set_background_color(dow_layer, GColorBlack);
+  text_layer_set_text_color(dow_layer, GColorWhite);
   text_layer_set_text_alignment(dow_layer, GTextAlignmentLeft);
   text_layer_set_font(dow_layer, fonts_load_custom_font(text_font));
   layer_add_child(window_get_root_layer(window), (Layer*) dow_layer);
@@ -69,8 +81,8 @@ void add_dow_layer(ResHandle text_font) {
 
 void add_battery_layer(ResHandle text_font) {
   battery_layer = text_layer_create(GRect (72, 0, 72, 20));
-  text_layer_set_background_color(battery_layer, GColorClear);
-  text_layer_set_text_color(battery_layer, GColorBlack);
+  text_layer_set_background_color(battery_layer, GColorBlack);
+  text_layer_set_text_color(battery_layer, GColorWhite);
   text_layer_set_text_alignment(battery_layer, GTextAlignmentRight);
   text_layer_set_font(battery_layer, fonts_load_custom_font(text_font));
   BatteryChargeState charge_state = battery_state_service_peek();
@@ -80,10 +92,19 @@ void add_battery_layer(ResHandle text_font) {
   layer_add_child(window_get_root_layer(window), (Layer*) battery_layer);
 }
 
+void add_home_layer(ResHandle text_font) {
+  home_layer = text_layer_create(GRect (0, 115, 144, 20));
+  text_layer_set_background_color(home_layer, GColorBlack);
+  text_layer_set_text_color(home_layer, GColorWhite);
+  text_layer_set_text_alignment(home_layer, GTextAlignmentRight);
+  text_layer_set_font(home_layer, fonts_load_custom_font(text_font));
+  layer_add_child(window_get_root_layer(window), (Layer*) home_layer);
+}
+
 void add_bluetooth_layer(ResHandle text_font) {
   bt_layer = text_layer_create(GRect (0, 0, 72, 20));
-  text_layer_set_background_color(bt_layer, GColorClear);
-  text_layer_set_text_color(bt_layer, GColorBlack);
+  text_layer_set_background_color(bt_layer, GColorBlack);
+  text_layer_set_text_color(bt_layer, GColorWhite);
   text_layer_set_text_alignment(bt_layer, GTextAlignmentLeft);
   text_layer_set_font(bt_layer, fonts_load_custom_font(text_font));
   text_layer_set_text(bt_layer, (bluetooth_connection_service_peek() ? "BT" : ""));
@@ -94,13 +115,13 @@ void window_load(Window *window)
 {
   ResHandle time_font = resource_get_handle(RESOURCE_ID_FONT_FUTURA_50);
   ResHandle text_font = resource_get_handle(RESOURCE_ID_FONT_UBUNTU_16);
+  add_bg_layer();
   add_time_layer(time_font);
   add_date_layer(text_font);
   add_dow_layer(text_font);
   add_bluetooth_layer(text_font);
   add_battery_layer(text_font);
-  inv_layer = inverter_layer_create(GRect(0, 0, 144, 168));
-  layer_add_child(window_get_root_layer(window), (Layer*) inv_layer);
+  add_home_layer(text_font);
 
   //Manually call the tick handler when the window is loading
   struct tm *t;
@@ -113,12 +134,12 @@ void window_load(Window *window)
 void window_unload(Window *window)
 {
   //We will safely destroy the Window's elements here!
+  text_layer_destroy(bg_layer);
   text_layer_destroy(time_layer);
   text_layer_destroy(date_layer);
   text_layer_destroy(dow_layer);
   text_layer_destroy(battery_layer);
   text_layer_destroy(bt_layer);
-  inverter_layer_destroy(inv_layer);
 }
 
 void init()
