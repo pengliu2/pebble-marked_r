@@ -7,13 +7,13 @@ TextLayer *date_layer;
 TextLayer *dow_layer;
 TextLayer *battery_layer;
 TextLayer *bt_layer;
-TextLayer *home_layer;
+TextLayer *step_layer;
 
 char time_buffer[] = "00:00";
 char date_buffer[] = "00 September";
 char long_dow_buffer[] = "000";
 char dow_buffer[] = "00";
-char home_buffer[] = "00000000000000000";
+char step_buffer[] = "00000";
 
 void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
@@ -23,15 +23,13 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   strftime(date_buffer, sizeof("00 September"), "%d %B", tick_time);
   strftime(long_dow_buffer, sizeof("000"), "%a", tick_time);
   strncpy(dow_buffer, long_dow_buffer, 2);
-  if (false && clock_is_timezone_set()) {
-    clock_get_timezone(home_buffer, 32);
-    text_layer_set_text(home_layer, home_buffer);
-  }
+  snprintf(step_buffer, 5, "%d", (int)health_service_sum_today(HealthMetricStepCount));
 
   //Change the TextLayer text to show the new time!
   text_layer_set_text(time_layer, time_buffer);
   text_layer_set_text(date_layer, date_buffer);
   text_layer_set_text(dow_layer, dow_buffer);
+  text_layer_set_text(step_layer, step_buffer);
 }
 
 
@@ -92,13 +90,13 @@ void add_battery_layer(ResHandle text_font) {
   layer_add_child(window_get_root_layer(window), (Layer*) battery_layer);
 }
 
-void add_home_layer(ResHandle text_font) {
-  home_layer = text_layer_create(GRect (0, 115, 144, 20));
-  text_layer_set_background_color(home_layer, GColorBlack);
-  text_layer_set_text_color(home_layer, GColorWhite);
-  text_layer_set_text_alignment(home_layer, GTextAlignmentRight);
-  text_layer_set_font(home_layer, fonts_load_custom_font(text_font));
-  layer_add_child(window_get_root_layer(window), (Layer*) home_layer);
+void add_step_layer(ResHandle text_font) {
+  step_layer = text_layer_create(GRect (0, 115, 144, 20));
+  text_layer_set_background_color(step_layer, GColorBlack);
+  text_layer_set_text_color(step_layer, GColorWhite);
+  text_layer_set_text_alignment(step_layer, GTextAlignmentCenter);
+  text_layer_set_font(step_layer, fonts_load_custom_font(text_font));
+  layer_add_child(window_get_root_layer(window), (Layer*) step_layer);
 }
 
 void add_bluetooth_layer(ResHandle text_font) {
@@ -121,7 +119,7 @@ void window_load(Window *window)
   add_dow_layer(text_font);
   add_bluetooth_layer(text_font);
   add_battery_layer(text_font);
-  add_home_layer(text_font);
+  add_step_layer(text_font);
 
   //Manually call the tick handler when the window is loading
   struct tm *t;
@@ -140,6 +138,7 @@ void window_unload(Window *window)
   text_layer_destroy(dow_layer);
   text_layer_destroy(battery_layer);
   text_layer_destroy(bt_layer);
+  text_layer_destroy(step_layer);
 }
 
 void init()
