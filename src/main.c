@@ -91,7 +91,7 @@ void add_battery_layer(ResHandle text_font) {
 }
 
 void add_step_layer(ResHandle text_font) {
-  step_layer = text_layer_create(GRect (0, 115, 144, 20));
+  step_layer = text_layer_create(GRect (0, 103, 144, 17));
   text_layer_set_background_color(step_layer, GColorBlack);
   text_layer_set_text_color(step_layer, GColorWhite);
   text_layer_set_text_alignment(step_layer, GTextAlignmentCenter);
