@@ -13,7 +13,7 @@ char time_buffer[] = "00:00";
 char date_buffer[] = "00 September";
 char long_dow_buffer[] = "000";
 char dow_buffer[] = "00";
-char step_buffer[] = "00000";
+char step_buffer[] = "0000000000";
 
 void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
@@ -23,7 +23,7 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   strftime(date_buffer, sizeof("00 September"), "%d %B", tick_time);
   strftime(long_dow_buffer, sizeof("000"), "%a", tick_time);
   strncpy(dow_buffer, long_dow_buffer, 2);
-  snprintf(step_buffer, 5, "%d", (int)health_service_sum_today(HealthMetricStepCount));
+  snprintf(step_buffer, 10, "%d", (int)health_service_sum_today(HealthMetricStepCount));
 
   //Change the TextLayer text to show the new time!
   text_layer_set_text(time_layer, time_buffer);
