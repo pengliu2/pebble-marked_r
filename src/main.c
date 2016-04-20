@@ -6,8 +6,10 @@ TextLayer *time_layer;
 TextLayer *date_layer;
 TextLayer *dow_layer;
 TextLayer *battery_layer;
-TextLayer *bt_layer;
 TextLayer *step_layer;
+
+BitmapLayer *bt_layer;
+GBitmap *bt_img;
 
 char time_buffer[] = "00:00";
 char date_buffer[] = "00 September";
@@ -40,7 +42,7 @@ static void handle_battery(BatteryChargeState charge_state) {
  }
 
 void handle_bluetooth(bool connected) {
-  text_layer_set_text(bt_layer, connected ? "BT" : "");
+  layer_set_hidden(bitmap_layer_get_layer(bt_layer), !connected);
   vibes_double_pulse();
 }
 
@@ -99,13 +101,10 @@ void add_step_layer(ResHandle text_font) {
   layer_add_child(window_get_root_layer(window), (Layer*) step_layer);
 }
 
-void add_bluetooth_layer(ResHandle text_font) {
-  bt_layer = text_layer_create(GRect (0, 0, 72, 20));
-  text_layer_set_background_color(bt_layer, GColorBlack);
-  text_layer_set_text_color(bt_layer, GColorWhite);
-  text_layer_set_text_alignment(bt_layer, GTextAlignmentLeft);
-  text_layer_set_font(bt_layer, fonts_load_custom_font(text_font));
-  text_layer_set_text(bt_layer, (bluetooth_connection_service_peek() ? "BT" : ""));
+void add_bluetooth_layer() {
+  bt_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_LOGO);
+  bt_layer = bitmap_layer_create(GRect (0, 0, 20, 20));
+  bitmap_layer_set_bitmap(bt_layer, bt_img);
   layer_add_child(window_get_root_layer(window), (Layer*) bt_layer);
 }
 
@@ -117,7 +116,7 @@ void window_load(Window *window)
   add_time_layer(time_font);
   add_date_layer(text_font);
   add_dow_layer(text_font);
-  add_bluetooth_layer(text_font);
+  add_bluetooth_layer();
   add_battery_layer(text_font);
   add_step_layer(text_font);
 
@@ -132,12 +131,13 @@ void window_load(Window *window)
 void window_unload(Window *window)
 {
   //We will safely destroy the Window's elements here!
+  gbitmap_destroy(bt_img);
   text_layer_destroy(bg_layer);
   text_layer_destroy(time_layer);
   text_layer_destroy(date_layer);
   text_layer_destroy(dow_layer);
   text_layer_destroy(battery_layer);
-  text_layer_destroy(bt_layer);
+  bitmap_layer_destroy(bt_layer);
   text_layer_destroy(step_layer);
 }
 

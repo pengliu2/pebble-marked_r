@@ -1,8 +1,7 @@
 {
     "appKeys": {},
     "capabilities": [
-        "location",
-        "configurable"
+        ""
     ],
     "companyName": "wintermute115@gmail.com",
     "enableMultiJS": true,
@@ -10,6 +9,12 @@
     "projectType": "native",
     "resources": {
         "media": [
+            {
+                "file": "images/bt_logo.bmp",
+                "name": "IMAGE_BT_LOGO",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
             {
                 "file": "images/marked_r.png",
                 "menuIcon": true,
@@ -38,7 +43,7 @@
         "basalt"
     ],
     "uuid": "27daaa3c-633d-4198-861a-f3f55b9df552",
-    "versionLabel": "1.0",
+    "versionLabel": "2.0",
     "watchapp": {
         "watchface": true
     }
