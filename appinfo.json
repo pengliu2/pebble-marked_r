@@ -10,6 +10,72 @@
     "resources": {
         "media": [
             {
+                "file": "images/bat_100.png",
+                "name": "IMAGE_BATTERY_100",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
+                "file": "images/batt_90.png",
+                "name": "IMAGE_BATTERY_90",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
+                "file": "images/batt_80.png",
+                "name": "IMAGE_BATTERY_80",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
+                "file": "images/batt_70.png",
+                "name": "IMAGE_BATTERY_70",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
+                "file": "images/batt_60.png",
+                "name": "IMAGE_BATTERY_60",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
+                "file": "images/batt_50.png",
+                "name": "IMAGE_BATTERY_50",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
+                "file": "images/batt_40.png",
+                "name": "IMAGE_BATTERY_40",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
+                "file": "images/batt_30.png",
+                "name": "IMAGE_BATTERY_30",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
+                "file": "images/batt_20.png",
+                "name": "IMAGE_BATTERY_20",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
+                "file": "images/batt_10.png",
+                "name": "IMAGE_BATTERY_10",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
+                "file": "images/batt_0.png",
+                "name": "IMAGE_BATTERY_00",
+                "targetPlatforms": null,
+                "type": "png"
+            },
+            {
                 "file": "images/bt_logo.bmp",
                 "name": "IMAGE_BT_LOGO",
                 "targetPlatforms": null,

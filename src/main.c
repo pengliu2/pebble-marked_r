@@ -5,11 +5,12 @@ TextLayer *bg_layer;
 TextLayer *time_layer;
 TextLayer *date_layer;
 TextLayer *dow_layer;
-TextLayer *battery_layer;
 TextLayer *step_layer;
 
 BitmapLayer *bt_layer;
 GBitmap *bt_img;
+BitmapLayer *battery_layer;
+GBitmap *battery_img;
 
 char time_buffer[] = "00:00";
 char date_buffer[] = "00 September";
@@ -35,11 +36,49 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 }
 
 
+ResHandle get_battery_resource(int percent) {
+  switch (percent) {
+    case 0:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_00);
+      break;
+    case 10:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_10);
+      break;
+    case 20:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_20);
+      break;
+    case 30:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_30);
+      break;
+    case 40:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_40);
+      break;
+    case 50:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_50);
+      break;
+    case 60:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_60);
+      break;
+    case 70:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_70);
+      break;
+    case 80:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_80);
+      break;
+    case 90:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_90);
+      break;
+    case 100:
+      battery_img = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_100);
+      break;
+  }
+  return battery_img;
+}
+
 static void handle_battery(BatteryChargeState charge_state) {
-  static char battery_text[] = "100%";
-  snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
-  text_layer_set_text(battery_layer, battery_text);
- }
+  battery_img = get_battery_resource(charge_state.charge_percent);
+  bitmap_layer_set_bitmap(battery_layer, battery_img);
+}
 
 void handle_bluetooth(bool connected) {
   layer_set_hidden(bitmap_layer_get_layer(bt_layer), !connected);
@@ -79,16 +118,12 @@ void add_dow_layer(ResHandle text_font) {
   layer_add_child(window_get_root_layer(window), (Layer*) dow_layer);
 }
 
-void add_battery_layer(ResHandle text_font) {
-  battery_layer = text_layer_create(GRect (72, 0, 72, 20));
-  text_layer_set_background_color(battery_layer, GColorBlack);
-  text_layer_set_text_color(battery_layer, GColorWhite);
-  text_layer_set_text_alignment(battery_layer, GTextAlignmentRight);
-  text_layer_set_font(battery_layer, fonts_load_custom_font(text_font));
+void add_battery_layer() {
+  battery_layer = bitmap_layer_create(GRect(99, 0, 45, 20));
+  layer_add_child(window_get_root_layer(window), (Layer*) battery_layer);
   BatteryChargeState charge_state = battery_state_service_peek();
-  static char battery_text[] = "100%";
-  snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
-  text_layer_set_text(battery_layer, battery_text);
+  battery_img = get_battery_resource(charge_state.charge_percent);
+  bitmap_layer_set_bitmap(battery_layer, battery_img);
   layer_add_child(window_get_root_layer(window), (Layer*) battery_layer);
 }
 
@@ -117,7 +152,7 @@ void window_load(Window *window)
   add_date_layer(text_font);
   add_dow_layer(text_font);
   add_bluetooth_layer();
-  add_battery_layer(text_font);
+  add_battery_layer();
   add_step_layer(text_font);
 
   //Manually call the tick handler when the window is loading
@@ -136,7 +171,7 @@ void window_unload(Window *window)
   text_layer_destroy(time_layer);
   text_layer_destroy(date_layer);
   text_layer_destroy(dow_layer);
-  text_layer_destroy(battery_layer);
+  bitmap_layer_destroy(battery_layer);
   bitmap_layer_destroy(bt_layer);
   text_layer_destroy(step_layer);
 }
