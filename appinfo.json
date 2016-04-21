@@ -10,7 +10,7 @@
     "resources": {
         "media": [
             {
-                "file": "images/bat_100.png",
+                "file": "images/batt_100.png",
                 "name": "IMAGE_BATTERY_100",
                 "targetPlatforms": null,
                 "type": "png"
