@@ -32,7 +32,10 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   text_layer_set_text(time_layer, time_buffer);
   text_layer_set_text(date_layer, date_buffer);
   text_layer_set_text(dow_layer, dow_buffer);
-  text_layer_set_text(step_layer, step_buffer);
+  #if defined(PBL_HEALTH)
+    snprintf(step_buffer, 10, "%d", (int)health_service_sum_today(HealthMetricStepCount));
+    text_layer_set_text(step_layer, step_buffer);
+  #endif
 }
 
 
@@ -133,7 +136,9 @@ void add_step_layer(ResHandle text_font) {
   text_layer_set_text_color(step_layer, GColorWhite);
   text_layer_set_text_alignment(step_layer, GTextAlignmentCenter);
   text_layer_set_font(step_layer, fonts_load_custom_font(text_font));
-  layer_add_child(window_get_root_layer(window), (Layer*) step_layer);
+  #if defined(PBL_HEALTH) 
+    layer_add_child(window_get_root_layer(window), (Layer*) step_layer);
+  #endif
 }
 
 void add_bluetooth_layer() {

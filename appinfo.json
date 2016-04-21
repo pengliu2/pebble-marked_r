@@ -98,6 +98,7 @@
                 "characterRegex": "[0-9:|]",
                 "file": "fonts/Futura Bold BT.ttf",
                 "name": "FONT_FUTURA_50",
+                "targetPlatforms": null,
                 "type": "font"
             }
         ]
