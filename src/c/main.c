@@ -1,11 +1,17 @@
 #include <pebble.h>
 
+const uint32_t inbox_size = 64;
+const uint32_t outbox_size = 256;
+
+DictionaryIterator *out_iter;
+
 Window *window;
 TextLayer *bg_layer;
 TextLayer *time_layer;
 TextLayer *date_layer;
 TextLayer *dow_layer;
 TextLayer *step_layer;
+TextLayer *weather_layer;
 
 BitmapLayer *bt_layer;
 GBitmap *bt_img;
@@ -17,6 +23,7 @@ char date_buffer[] = "00 September";
 char long_dow_buffer[] = "000";
 char dow_buffer[] = "00";
 char step_buffer[] = "0000000000";
+char weather_buffer[] = "                    ";
 
 void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
@@ -32,12 +39,24 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   text_layer_set_text(time_layer, time_buffer);
   text_layer_set_text(date_layer, date_buffer);
   text_layer_set_text(dow_layer, dow_buffer);
-  #if defined(PBL_HEALTH)
+  //#if defined(PBL_HEALTH)
     snprintf(step_buffer, 10, "%d", (int)health_service_sum_today(HealthMetricStepCount));
     text_layer_set_text(step_layer, step_buffer);
-  #endif
-}
+  //#endif
+  
+  AppMessageResult result = app_message_outbox_begin(&out_iter);
+  if(result == APP_MSG_OK) {
+    // Construct the message
+    int value = 0;
+    dict_write_int(out_iter, MESSAGE_KEY_RequestData, &value, sizeof(int), true);
+    result = app_message_outbox_send();
 
+  } else {
+    // The outbox cannot be used right now
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
+  }
+}
+  
 
 ResHandle get_battery_resource(int percent) {
   switch (percent) {
@@ -88,6 +107,27 @@ void handle_bluetooth(bool connected) {
   vibes_double_pulse();
 }
 
+static void inbox_received_callback(DictionaryIterator *iter, void *context) {
+  // Is the weather inside this message?
+  Tuple *weather_tuple = dict_find(iter, MESSAGE_KEY_WEATHER);
+  if(weather_tuple) {
+    // This value was stored as JS String, which is stored here as a char string
+    char *weather_str = weather_tuple->value->cstring;
+
+    // Use a static buffer to store the string for display
+    static char s_buffer[20];
+    snprintf(s_buffer, sizeof(s_buffer), "%s", weather_str);
+
+    // Display in the TextLayer
+    text_layer_set_text(weather_layer, s_buffer);
+  }
+}
+
+static void inbox_dropped_callback(AppMessageResult reason, void *context) {
+  // A message was received, but had to be dropped
+  APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped. Reason: %d", (int)reason);
+}
+
 void add_bg_layer () {
   bg_layer = text_layer_create(GRect(0, 0, 144, 168));
   text_layer_set_background_color(bg_layer, GColorBlack);
@@ -136,9 +176,18 @@ void add_step_layer(ResHandle text_font) {
   text_layer_set_text_color(step_layer, GColorWhite);
   text_layer_set_text_alignment(step_layer, GTextAlignmentCenter);
   text_layer_set_font(step_layer, fonts_load_custom_font(text_font));
-  #if defined(PBL_HEALTH) 
+  //#if defined(PBL_HEALTH) 
     layer_add_child(window_get_root_layer(window), (Layer*) step_layer);
-  #endif
+  //#endif
+}
+
+void add_weather_layer(ResHandle text_font) {
+  weather_layer = text_layer_create(GRect (0, 46, 144, 17));
+  text_layer_set_background_color(weather_layer, GColorBlack);
+  text_layer_set_text_color(weather_layer, GColorWhite);
+  text_layer_set_text_alignment(weather_layer, GTextAlignmentCenter);
+  text_layer_set_font(weather_layer, fonts_load_custom_font(text_font));
+  layer_add_child(window_get_root_layer(window), (Layer*) weather_layer);
 }
 
 void add_bluetooth_layer() {
@@ -159,6 +208,8 @@ void window_load(Window *window)
   add_bluetooth_layer();
   add_battery_layer();
   add_step_layer(text_font);
+  add_weather_layer(text_font);
+  
 
   //Manually call the tick handler when the window is loading
   struct tm *t;
@@ -192,6 +243,9 @@ void init()
   tick_timer_service_subscribe(MINUTE_UNIT, (TickHandler) tick_handler);
   battery_state_service_subscribe(&handle_battery);
   bluetooth_connection_service_subscribe(&handle_bluetooth);
+  app_message_register_inbox_received(inbox_received_callback);
+  app_message_register_inbox_dropped(inbox_dropped_callback);
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
   window_stack_push(window, true);
 }
  
