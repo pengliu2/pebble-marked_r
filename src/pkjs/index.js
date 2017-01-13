@@ -28,7 +28,7 @@ function locationSucess(pos){
         var temp = json.main.temp.toFixed(0);
         var cond = json.weather[0].main;
         var dictionary = {
-          'WEATHER': cond + " | " + temp + '°C'
+          'WEATHER': cond + " " + temp + '°C'
         };
   
         // Send to Pebble

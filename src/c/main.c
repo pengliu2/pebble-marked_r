@@ -44,19 +44,26 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
     text_layer_set_text(step_layer, step_buffer);
   //#endif
   
-  AppMessageResult result = app_message_outbox_begin(&out_iter);
-  if(result == APP_MSG_OK) {
-    // Construct the message
-    int value = 0;
-    dict_write_int(out_iter, MESSAGE_KEY_RequestData, &value, sizeof(int), true);
-    result = app_message_outbox_send();
-
-  } else {
-    // The outbox cannot be used right now
-    APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
+  char strmins[] = "00";
+  int intmins = 0;
+  strftime(strmins, sizeof("00"), "%M", tick_time);
+  intmins = atoi(strmins);
+  
+  if (intmins % 15 == 0) {
+    AppMessageResult result = app_message_outbox_begin(&out_iter);
+    if(result == APP_MSG_OK) {
+      // Construct the message
+      int value = 0;
+      dict_write_int(out_iter, MESSAGE_KEY_RequestData, &value, sizeof(int), true);
+      result = app_message_outbox_send();
+  
+    } else {
+      // The outbox cannot be used right now
+      APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
+    }
   }
 }
-  
+    
 
 ResHandle get_battery_resource(int percent) {
   switch (percent) {
