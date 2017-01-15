@@ -211,7 +211,6 @@ void add_bluetooth_layer() {
 }
 
 static void prv_unobstructed_change(AnimationProgress progress, void *context) {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Progress %d", (int)progress);
   // Current unobstructed window size
   GRect bounds = layer_get_unobstructed_bounds(window_layer);
   // Move the weather layer
