@@ -5,13 +5,14 @@ const uint32_t outbox_size = 256;
 
 DictionaryIterator *out_iter;
 
-Window *window;
-TextLayer *bg_layer;
-TextLayer *time_layer;
-TextLayer *date_layer;
-TextLayer *dow_layer;
-TextLayer *step_layer;
-TextLayer *weather_layer;
+static Window *window;
+static Layer *window_layer;
+static TextLayer *bg_layer;
+static TextLayer *time_layer;
+static TextLayer *date_layer;
+static TextLayer *dow_layer;
+static TextLayer *step_layer;
+static TextLayer *weather_layer;
 
 BitmapLayer *bt_layer;
 GBitmap *bt_img;
@@ -135,6 +136,11 @@ static void inbox_dropped_callback(AppMessageResult reason, void *context) {
   APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped. Reason: %d", (int)reason);
 }
 
+void add_window_layer () {
+  window_layer = layer_create(GRect(0, 0, 144, 168));
+  layer_add_child(window_get_root_layer(window), (Layer*) window_layer);
+}
+
 void add_bg_layer () {
   bg_layer = text_layer_create(GRect(0, 0, 144, 168));
   text_layer_set_background_color(bg_layer, GColorBlack);
@@ -204,10 +210,38 @@ void add_bluetooth_layer() {
   layer_add_child(window_get_root_layer(window), (Layer*) bt_layer);
 }
 
+static void prv_unobstructed_change(AnimationProgress progress, void *context) {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Progress %d", (int)progress);
+  // Current unobstructed window size
+  GRect bounds = layer_get_unobstructed_bounds(window_layer);
+  // Move the weather layer
+  GRect weather_frame = layer_get_frame(text_layer_get_layer(weather_layer));
+  weather_frame.origin.y = (bounds.size.h/2)-36;
+  layer_set_frame(text_layer_get_layer(weather_layer), weather_frame);
+  // Move the time layer
+  GRect time_frame = layer_get_frame(text_layer_get_layer(time_layer));
+  time_frame.origin.y = (bounds.size.h/2)-31;
+  layer_set_frame(text_layer_get_layer(time_layer), time_frame);
+  // Move the steps layer
+  GRect step_frame = layer_get_frame(text_layer_get_layer(step_layer));
+  step_frame.origin.y = (bounds.size.h/2)+19;
+  layer_set_frame(text_layer_get_layer(step_layer), step_frame);
+  // Move the dow layer
+  GRect dow_frame = layer_get_frame(text_layer_get_layer(dow_layer));
+  dow_frame.origin.y = (bounds.size.h)-20;
+  layer_set_frame(text_layer_get_layer(dow_layer), dow_frame);
+  // Move the date layer
+  GRect date_frame = layer_get_frame(text_layer_get_layer(date_layer));
+  date_frame.origin.y = (bounds.size.h)-20;
+  layer_set_frame(text_layer_get_layer(date_layer), date_frame);
+  
+}
+
 void window_load(Window *window)
 {
   ResHandle time_font = resource_get_handle(RESOURCE_ID_FONT_FUTURA_50);
   ResHandle text_font = resource_get_handle(RESOURCE_ID_FONT_UBUNTU_16);
+  add_window_layer();
   add_bg_layer();
   add_time_layer(time_font);
   add_date_layer(text_font);
@@ -216,7 +250,6 @@ void window_load(Window *window)
   add_battery_layer();
   add_step_layer(text_font);
   add_weather_layer(text_font);
-  
 
   //Manually call the tick handler when the window is loading
   struct tm *t;
@@ -224,7 +257,12 @@ void window_load(Window *window)
   temp = time(NULL);
   t = localtime(&temp);
   tick_handler(t, MINUTE_UNIT);
-}
+  
+  UnobstructedAreaHandlers handlers = {
+    .change = prv_unobstructed_change
+  };
+  unobstructed_area_service_subscribe(handlers, NULL);
+  }
 
 void window_unload(Window *window)
 {
@@ -237,6 +275,7 @@ void window_unload(Window *window)
   bitmap_layer_destroy(battery_layer);
   bitmap_layer_destroy(bt_layer);
   text_layer_destroy(step_layer);
+  layer_destroy(window_layer);
 }
 
 void init()
@@ -271,4 +310,3 @@ int main(void)
   app_event_loop();
   deinit();
 }
-
