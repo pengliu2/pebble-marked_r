@@ -41,8 +41,8 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   text_layer_set_text(date_layer, date_buffer);
   text_layer_set_text(dow_layer, dow_buffer);
   //#if defined(PBL_HEALTH)
-    snprintf(step_buffer, 10, "%d", (int)health_service_sum_today(HealthMetricStepCount));
-    text_layer_set_text(step_layer, step_buffer);
+    //snprintf(step_buffer, 10, "%d", (int)health_service_sum_today(HealthMetricStepCount));
+    //text_layer_set_text(step_layer, step_buffer);
   //#endif
   
   char strmins[] = "00";
@@ -214,17 +214,17 @@ static void prv_unobstructed_change(AnimationProgress progress, void *context) {
   // Current unobstructed window size
   GRect bounds = layer_get_unobstructed_bounds(window_layer);
   // Move the weather layer
-  GRect weather_frame = layer_get_frame(text_layer_get_layer(weather_layer));
-  weather_frame.origin.y = (bounds.size.h/2)-36;
-  layer_set_frame(text_layer_get_layer(weather_layer), weather_frame);
+  //GRect weather_frame = layer_get_frame(text_layer_get_layer(weather_layer));
+  //weather_frame.origin.y = (bounds.size.h/2)-36;
+  //layer_set_frame(text_layer_get_layer(weather_layer), weather_frame);
   // Move the time layer
   GRect time_frame = layer_get_frame(text_layer_get_layer(time_layer));
   time_frame.origin.y = (bounds.size.h/2)-31;
   layer_set_frame(text_layer_get_layer(time_layer), time_frame);
   // Move the steps layer
-  GRect step_frame = layer_get_frame(text_layer_get_layer(step_layer));
-  step_frame.origin.y = (bounds.size.h/2)+19;
-  layer_set_frame(text_layer_get_layer(step_layer), step_frame);
+  //GRect step_frame = layer_get_frame(text_layer_get_layer(step_layer));
+  //step_frame.origin.y = (bounds.size.h/2)+19;
+  //layer_set_frame(text_layer_get_layer(step_layer), step_frame);
   // Move the dow layer
   GRect dow_frame = layer_get_frame(text_layer_get_layer(dow_layer));
   dow_frame.origin.y = (bounds.size.h)-20;
@@ -247,8 +247,8 @@ void window_load(Window *window)
   add_dow_layer(text_font);
   add_bluetooth_layer();
   add_battery_layer();
-  add_step_layer(text_font);
-  add_weather_layer(text_font);
+  //a(text_font);
+  //add_weather_layer(text_font);
 
   //Manually call the tick handler when the window is loading
   struct tm *t;
@@ -273,8 +273,8 @@ void window_unload(Window *window)
   text_layer_destroy(dow_layer);
   bitmap_layer_destroy(battery_layer);
   bitmap_layer_destroy(bt_layer);
-  text_layer_destroy(step_layer);
-  layer_destroy(window_layer);
+  //text_layer_destroy(step_layer);
+  //layer_destroy(window_layer);
 }
 
 void init()
@@ -288,9 +288,9 @@ void init()
   tick_timer_service_subscribe(MINUTE_UNIT, (TickHandler) tick_handler);
   battery_state_service_subscribe(&handle_battery);
   bluetooth_connection_service_subscribe(&handle_bluetooth);
-  app_message_register_inbox_received(inbox_received_callback);
-  app_message_register_inbox_dropped(inbox_dropped_callback);
-  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+  //app_message_register_inbox_received(inbox_received_callback);
+  //app_message_register_inbox_dropped(inbox_dropped_callback);
+  //app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
   window_stack_push(window, true);
 }
  

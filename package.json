@@ -18,23 +18,16 @@
         "resources": {
             "media": [
                 {
-                    "characterRegex": "[ \\w%\u00b0|\\-]",
-                    "file": "fonts/Ubuntu-M.ttf",
-                    "name": "FONT_UBUNTU_16",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
                     "file": "images/marked_r.png",
                     "menuIcon": true,
                     "name": "menu_image",
                     "type": "png"
                 },
                 {
-                    "file": "images/batt_100.png",
-                    "name": "IMAGE_BATTERY_100",
+                    "file": "images/bt_logo.bmp",
+                    "name": "IMAGE_BT_LOGO",
                     "targetPlatforms": null,
-                    "type": "png"
+                    "type": "bitmap"
                 },
                 {
                     "file": "images/batt_90.png",
@@ -85,6 +78,12 @@
                     "type": "png"
                 },
                 {
+                    "file": "images/batt_100.png",
+                    "name": "IMAGE_BATTERY_100",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
                     "file": "images/batt_10.png",
                     "name": "IMAGE_BATTERY_10",
                     "targetPlatforms": null,
@@ -97,10 +96,11 @@
                     "type": "png"
                 },
                 {
-                    "file": "images/bt_logo.bmp",
-                    "name": "IMAGE_BT_LOGO",
+                    "characterRegex": "[ \\w%\u00b0|\\-]",
+                    "file": "fonts/Ubuntu-M.ttf",
+                    "name": "FONT_UBUNTU_16",
                     "targetPlatforms": null,
-                    "type": "bitmap"
+                    "type": "font"
                 },
                 {
                     "characterRegex": "[0-9:]",
@@ -113,8 +113,6 @@
         },
         "sdkVersion": "3",
         "targetPlatforms": [
-            "aplite",
-            "basalt",
             "diorite"
         ],
         "uuid": "27daaa3c-633d-4198-861a-f3f55b9df552",
